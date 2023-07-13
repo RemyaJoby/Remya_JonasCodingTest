@@ -45,5 +45,11 @@ namespace DataAccessLayer.Repositories
 
             return _companyDbWrapper.Insert(company);
         }
+
+        public bool DeleteCompany(string companyCode)
+        {
+            return _companyDbWrapper.Delete(t => t.CompanyCode == companyCode);
+        }
+
     }
 }

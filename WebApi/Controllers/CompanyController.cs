@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using AutoMapper;
 using BusinessLayer.Model.Interfaces;
+using BusinessLayer.Model.Models;
 using WebApi.Models;
 
 namespace WebApi.Controllers
@@ -31,19 +32,31 @@ namespace WebApi.Controllers
             return _mapper.Map<CompanyDto>(item);
         }
 
-        // POST api/<controller>
-        public void Post([FromBody]string value)
+        public void Post([FromBody] string value)
         {
+            // create
+            bool result = _companyService.SaveCompany(_mapper.Map<CompanyInfo>(value));
         }
 
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public void Put([FromBody] CompanyDto value)
         {
+            //Save is handling both insert and update.
+            bool result = _companyService.SaveCompany(_mapper.Map<CompanyInfo>(value));
         }
 
         // DELETE api/<controller>/5
-        public void Delete(int id)
+        public void Delete(string companyCode)
         {
+            try
+            {
+                bool result = _companyService.DeleteCompany(companyCode);
+            }
+            catch (Exception ex)
+            {
+                // _exLogger.LogAsync(ex.Message)
+            }
+
         }
     }
 }

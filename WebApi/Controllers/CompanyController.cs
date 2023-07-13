@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using BusinessLayer.Model.Interfaces;
@@ -19,44 +20,31 @@ namespace WebApi.Controllers
             _mapper = mapper;
         }
         // GET api/<controller>
-        public IEnumerable<CompanyDto> GetAll()
+        public async Task<IEnumerable<CompanyDto>> GetAll()
         {
-            var items = _companyService.GetAllCompanies();
+            var items = await _companyService.GetAllCompanies();
             return _mapper.Map<IEnumerable<CompanyDto>>(items);
         }
 
         // GET api/<controller>/5
-        public CompanyDto Get(string companyCode)
+        public async Task<CompanyDto> Get(string companyCode)
         {
-            var item = _companyService.GetCompanyByCode(companyCode);
+            var item = await _companyService.GetCompanyByCode(companyCode);
             return _mapper.Map<CompanyDto>(item);
         }
 
-        public void Post([FromBody] string value)
+        public async Task<bool> Post([FromBody] string value)
         {
             // create
-            bool result = _companyService.SaveCompany(_mapper.Map<CompanyInfo>(value));
+            return await _companyService.SaveCompany(_mapper.Map<CompanyInfo>(value));
         }
 
         // PUT api/<controller>/5
-        public void Put([FromBody] CompanyDto value)
+        public async Task<bool> Put([FromBody] CompanyDto value)
         {
             //Save is handling both insert and update.
-            bool result = _companyService.SaveCompany(_mapper.Map<CompanyInfo>(value));
+            return await _companyService.SaveCompany(_mapper.Map<CompanyInfo>(value));
         }
 
-        // DELETE api/<controller>/5
-        public void Delete(string companyCode)
-        {
-            try
-            {
-                bool result = _companyService.DeleteCompany(companyCode);
-            }
-            catch (Exception ex)
-            {
-                // _exLogger.LogAsync(ex.Message)
-            }
-
-        }
     }
 }
